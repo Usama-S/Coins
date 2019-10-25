@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+
+    <style>
+
+        body {
+            background-image: url(background1.png);
+            background-repeat: no-repeat;
+            background-size: 100%;
+        }
+
+        #img {
+            margin-top: 450px;
+        }
+
+        .stone {
+            height: 100px;
+            width: 100px;
+            background-color: black;
+            text-align: center;
+            line-height: 100px;
+            border-radius: 50%;
+            animation-name: drop;
+            animation-duration: 2s;
+            animation-timing-function: linear;
+            margin-top: 490px;
+            position: relative;
+            position: absolute;
+        }
+
+        @keyframes drop {
+            0% {
+                margin-top: 0px;
+            }
+
+            100% {
+                margin-top: 490px;
+                //380
+            }
+        }
+
+        #start {
+            margin: 100px 0px 0px 150px;
+            font-size: 72px;
+            position: absolute;
+        }
+        #start1 {
+            margin: 200px 0px 0px 150px;
+            font-size: 56px;
+            position: absolute;
+        }
+
+        #points{
+            position: absolute;
+            z-index: 10;
+            color: white;
+            /*height: 50px;
+            width: 100px;
+            background-color: black;*/
+            margin-left: 1100px;
+        }
+    </style>
+
+</head>
+<body onkeydown="select();" onkeyup="clear();">
+
+    <div id="points"></div>
+
+    <div id="appendhere"></div>
+
+    <h1 id="start">Press Space Bar to Start the game.</h1>
+    <h2 id="start1">If you miss 3 coins, you're OUT...!!</h2>
+
+    <div id="sprite">
+        <img id="img" src="boy/1.png" />
+    </div>
+
+</body>
+</html>
+
+<script>
+
+    var item = document.getElementById('img');
+    var iL = 1;
+    var marL = item.offsetLeft;
+    var iR = 1;
+    var eyeD = 1;
+    var divRemove = 1;
+    var coinLeft;
+    var boyLeft;
+    var coinTop;
+    var eyeD1 = 0;
+    var points = 0;
+
+    function play() {
+        setInterval(function () {
+            var div = document.createElement('div');
+            div.classList.add('stone');
+            div.id = eyeD;
+            div.innerHTML = '<img src="coin.png" width="100%" />';
+            eyeD++;
+
+            var a = parseInt(((window.screen.width) - 200) * Math.random());
+            div.style.marginLeft = a + "px";
+
+            document.getElementById('appendhere').appendChild(div);
+
+        }, 1000);
+
+        //setTimeout(function () {
+        //    setInterval(function () {
+        //        document.getElementById(divRemove).remove();
+        //        divRemove++;
+        //    }, 1000)
+        //}, 2000);
+
+        setTimeout(function () {
+            setInterval(function () {
+                eyeD1++;
+            }, 1000);
+        }, 1000);
+
+        setTimeout(function () {
+            setInterval(function () {
+
+                coinTop = document.getElementById(eyeD1).offsetTop;
+                coinLeft = document.getElementById(eyeD1).offsetLeft;
+                boyLeft = document.getElementById("img").offsetLeft;
+
+                if (coinTop > 380) {
+                    if ((boyLeft >= (coinLeft - 100)) && (boyLeft <= (coinLeft + 100))) {
+                        document.getElementById(eyeD1).remove();
+                        points += 5;
+                        document.getElementById('points').innerHTML = '<h1>Points : ' + points + '</h1 > '
+                    }
+                }
+            }, 10);
+        }, 1000);
+
+        setInterval(function () {
+            var count_out = document.getElementsByClassName('stone');
+            if (count_out.length == 5) {
+                window, location.reload();
+                alert("GAME OVER...!!");
+                alert("YOUR SCORE : " + points);
+                //window.location.reload();
+            }
+        }, 100);
+    }
+
+
+
+
+    //Points Collection
+
+    //function collide() {
+    //    setInterval(function () {
+    //        var x = document.getElementById("3").offsetLeft;
+    //        var y = document.getElementById("img").offsetLeft;
+    //        var z = document.getElementById("3").style.marginTop;
+
+    //        if (z > 380) {
+    //            if (x == y) {
+    //                document.getElementById("3").remove();
+    //            }
+    //        }
+    //    }, 100);
+    //}
+
+    //setTimeout(collide(), 3000);
+
+
+
+    function select() {
+        var a = event.keyCode;
+
+        if (a == 32) {
+            document.getElementById('start').style.display = "none";
+            document.getElementById('start1').style.display = "none";
+            play();
+        }
+
+        if (a == 37) {
+            marL = item.offsetLeft;
+            var timer = setInterval(Left, 50);
+            document.addEventListener('keyup', function () {
+                clearInterval(timer);
+            });
+        }
+
+        if (a == 39) {
+            marL = item.offsetLeft;
+            timer = setInterval(Right, 50);
+            document.addEventListener('keyup', function () {
+                clearInterval(timer);
+            });
+        }
+    }
+
+
+    //Left --> Left keycode = 37
+    function Left() {
+        item.src = 'boy/' + iL + '.png';
+        item.style.transform = 'scaleX(1)';
+        if ((marL > 0) && (marL < 1166)) {
+            item.style.marginLeft = marL + 'px';
+        }
+        iL++;
+        marL -= 50;
+
+        if (iL == 6)
+            iL = 1;
+
+    }
+
+    //Right --> Right keycode = 39
+    function Right() {
+        item.src = 'boy/' + iR + '.png';
+        item.style.transform = 'scaleX(-1)';
+        if ((marL > 0) && (marL < 1166)) {
+            item.style.marginLeft = marL + 'px';
+        }
+        iR++;
+        marL += 50;
+
+        if (iR == 6)
+            iR = 1;
+
+    }
+
+
+
+
+
+    ////Points Collection
+
+    //function collide() {
+    //    setInterval(function () {
+    //        var x = document.getElementById("3").offsetLeft;
+    //        var y = document.getElementById("img").offsetLeft;
+    //        var z = document.getElementById("3").style.marginTop;
+
+    //        if (z > 380) {
+    //            if (x == y) {
+    //                document.getElementById("3").remove();
+    //            }
+    //        }
+    //    }, 100)
+    //}
+
+    //setTimeout(collide(), 3000);
+
+</script>
